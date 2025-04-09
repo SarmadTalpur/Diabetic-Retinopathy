@@ -14,7 +14,7 @@ We collected fundus image data from the Sindh Institute of Ophthalmology and Vis
 
 ## Preprocessing
 
-Since the open-source data was collected from different sources, the images varied greatly. Some were zoomed in, and some zoomed out. The ratio of the fundus of an eye to the image had to be set for all images. Hence, we created a Python script to accomplish the preprocessing of all images, cut the extra black background of all the images, and set the standard resolution for all images, i.e., 300* 300.
+The images varied considerably since the open-source data was collected from different sources. Some were zoomed in, and some zoomed out. The fundus ratio of an eye to the image had to be set for all images. Hence, we created a Python script to preprocess all images, cut the extra black background of all the images, and set the standard resolution for all images, i.e., 300* 300.
 
 We separated 790 images from the data for testing. Later, we divided the rest of the data into 80% training and 20% validation datasets.
 
@@ -23,9 +23,9 @@ We separated 790 images from the data for testing. Later, we divided the rest of
 We trained three different deep learning models with transfer learning.
 
 ### 1. VGG16
-VGG16 consists of 16 layers with weights, 13 of which are convolution layers and 3 of which are dense layers. Five Max Pooling Layers are used that do not hold weights. The VGG16 model accepts a tensor of size 224*224 with 3 RGB channels. We prepared the dataset in an image data generator and used data augmentation to increase the data size.
+VGG16 consists of 16 layers with weights, 13 of which are convolution layers and 3 of which are dense layers. Five Max Pooling Layers are used that do not hold weights. The VGG16 model accepts a tensor of size 224*224 with 3 RGB channels. We prepared the dataset using an image data generator and used data augmentation to increase the data size.
 We downloaded the VGG16 model and fine-tuned it. We removed the default output dense layer and added a new dense output layer to predict from 2 classes (DR or No DR). We used the ‘sigmoid’ activation function for the output layer.
-We compiled the model using the ‘Adam’ optimizer, which has a default learning rate of 0.001 and a ‘binary_crossentropy’ loss function. We used an early stopping callback to monitor validation accuracy in the training process. This means that if validation accuracy doesn’t improve after a certain number of epochs, the training process will end. We also used the restoration of weight property on early stopping to use the weights from the epoch, which performed best on validation data.
+We compiled the model using the ‘Adam’ optimizer, with a default learning rate of 0.001 and a ‘binary_crossentropy’ loss function. We used an early stopping callback to monitor validation accuracy in the training process. This means the training process will end if validation accuracy doesn’t improve after a certain number of epochs. We also used the restoration of weight property on early stopping to use the weights from the epoch, which performed best on validation data.
 
 ### 2. ResNet50
 The input tensor used by Resnet50 has a dimension of 224*224. Thus, we created the dataset by employing an image data generator, preprocessing the photos to reduce their size, and then adding data augmentation by rotating, flipping, zooming in, and adjusting the width and height of the images. To address the issue of DR categorization, we applied transfer learning to the downloaded ResNet50 model and fine-tuned it to add a few extra layers. We added the following layers in the respective order:
@@ -56,3 +56,11 @@ After 30 epochs, model training stopped with an early stop callback. Validation 
 
 ### Custom CNN Model
 Model training occurred successively until 14 epochs. After the 14th epoch, the model training was force-stopped due to an early stopping callback when approaching the highest validation accuracy. Additionally, the model restored weights from epoch two due to optimal performance.
+
+| Model | Training Accuracy (%) | Training Loss (%) | Validation Accuracy (%) | Validation Loss (%) | AUC (%) |
+|--------|-----------|-------------|----------------------------|
+| `VGG16` | 73.72 | 57.67 | 74.53 | 55.94 | 61.74 |
+| `ResNet50` | 73.99 | 57.62 | 74.08 | 58.72 | 54.64 |
+| `Custom CNN Model` | 73.99 | 57.36 | 74.05 | 57.26 | 50.00 |
+
+After comparing the results of all the trained deep learning models, VGG16 outperformed other models by obtaining the highest validation accuracy, i.e., 74.53%, and the lowest validation loss of 55.94%. Thus, VGG16 performed best on the dataset provided and is deployed in the smartphone application.
