@@ -58,9 +58,11 @@ After 30 epochs, model training stopped with an early stop callback. Validation 
 Model training occurred successively until 14 epochs. After the 14th epoch, the model training was force-stopped due to an early stopping callback when approaching the highest validation accuracy. Additionally, the model restored weights from epoch two due to optimal performance.
 
 | Model | Training Accuracy (%) | Training Loss (%) | Validation Accuracy (%) | Validation Loss (%) | AUC (%) |
-|--------|-----------|-------------|----------------------------|
+|----------------|-----------|-------------|----------------------------| ------------- | ------------- |
 | `VGG16` | 73.72 | 57.67 | 74.53 | 55.94 | 61.74 |
 | `ResNet50` | 73.99 | 57.62 | 74.08 | 58.72 | 54.64 |
 | `Custom CNN Model` | 73.99 | 57.36 | 74.05 | 57.26 | 50.00 |
+
+
 
 After comparing the results of all the trained deep learning models, VGG16 outperformed other models by obtaining the highest validation accuracy, i.e., 74.53%, and the lowest validation loss of 55.94%. Thus, VGG16 performed best on the dataset provided and is deployed in the smartphone application.
